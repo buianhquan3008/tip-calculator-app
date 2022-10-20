@@ -1,17 +1,47 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import './App.css';
 
 function App() {
+    const ref = useRef(null);
     const [bill, setBill] = useState(0);
     const [numberPeople, setNumberPeople] = useState(0);
     const [tip, setTip] = useState(0);
     const [total, setTotal] = useState(0);
-    const handlerClick = () => {
-        const newTip = (bill * 15) / 100 / numberPeople;
+    const [tipPercent, setTipPercent] = useState(0);
+
+    const compute = () => {
+        const newTip = (bill * tipPercent) / 100 / numberPeople;
         const newTotal = bill / numberPeople + newTip;
+        console.log('1', bill);
+        console.log('2', tipPercent);
+        console.log('3', numberPeople);
         setTip(newTip);
         setTotal(newTotal);
     };
+    const handlerClickTipPercent = (e) => {
+        const ulElement = ref.current;
+        for (let liElement of ulElement.children) {
+            liElement.classList.remove('active');
+        }
+        setTipPercent(+e.target.innerHTML.replace('%', ''));
+        e.currentTarget.classList.add('active');
+    };
+
+    const handlerClick = () => {
+        const ulElement = ref.current;
+        setTip(0);
+        setTotal(0);
+        setBill(0);
+        setNumberPeople(0);
+
+        for (let liElement of ulElement.children) {
+            liElement.classList.remove('active');
+        }
+    };
+
+    const arrTipPercent = [5, 10, 15, 25, 50];
+    // useEffect(() => {}, [bill, tipPercent]);
+
     return (
         <div className='App'>
             <div className='wrap-title'>
@@ -28,18 +58,27 @@ function App() {
                                 placeholder='0'
                                 onChange={(e) => {
                                     setBill(e.target.value);
+                                    compute();
                                 }}
+                                value={bill === 0 ? '' : bill}
                             />
                         </div>
                     </div>
                     <div className='select-tip'>
                         <div className='select-tip__title'>Select Tip %</div>
-                        <ul className='select-tip__content'>
-                            <li className='select-tip__content'>5%</li>
-                            <li className='select-tip__content'>10%</li>
-                            <li className='select-tip__content'>15%</li>
-                            <li className='select-tip__content'>25%</li>
-                            <li className='select-tip__content'>50%</li>
+                        <ul className='select-tip__contents' ref={ref}>
+                            {arrTipPercent.map((item) => (
+                                <li
+                                    key={item}
+                                    className='select-tip__content'
+                                    onClick={(e) => {
+                                        handlerClickTipPercent(e);
+                                        compute();
+                                    }}
+                                >
+                                    {item}%
+                                </li>
+                            ))}
                             <li>
                                 <input
                                     type='text'
@@ -58,7 +97,9 @@ function App() {
                                 placeholder='0'
                                 onChange={(e) => {
                                     setNumberPeople(e.target.value);
+                                    compute();
                                 }}
+                                value={numberPeople === 0 ? '' : numberPeople}
                             />
                             {/* <div className='people__number__value'>5</div> */}
                         </div>

@@ -189,6 +189,11 @@ code {
 }
 
 
+.people__title-wrap {
+  display: flex;
+  justify-content: space-between;
+}
+
 .people__title {
   font-family: 'Space Mono';
   font-style: normal;
@@ -197,6 +202,21 @@ code {
   line-height: 24px;
   color: #5E7A7D;
   /* margin: 10px; */
+}
+
+.people__validate {
+  font-family: 'Space Mono';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 24px;
+  text-align: right;
+  color: #E17457;
+  display: none;
+}
+
+.people__validate--active {
+ display: block;
 }
 
 .people__number {
@@ -352,6 +372,10 @@ code {
 .reset-button:hover  {
   background: #9FE8DF;
 }
+
+/* .disabled:hover  { */
+  /* background: #9FE8DF; */
+/* } */
 
 @media (min-width: 950px) { 
   .App {
